@@ -48,16 +48,19 @@ ansible-docker-monitoring-stack/
 │   └── Dockerfile            # Dockerfile для сборки Fluentd
 ├── requirements.yml          # Зависимости/Коллекции проекта
 ├── playbook.yml              # Главный Ansible Playbook
+├── LICENSE                   # Лицензия
 └── README.md                 # Документация проекта
 ```
 ## Установка и настройка
 ## Требования
 
-- **Ansible**
+- **Linux Ubuntu** (>= 22.12)
+- **Ansible** (core >= 2.15)
   - Коллекция `community.docker`.
   - Коллекция `community.mysql`.
 - **Python**
 
+Если ваша система не поддверживает ядро Ansible версии >=2.15 то коллекция `community.docker` может не работать. 
 
 ## Настройка
 
@@ -69,13 +72,15 @@ git clone https://github.com/khoroshavinaa/tst.git
 ### 2. Установка Ansible и зависимостей
 Установка Ansible:
 ```bash
-sudo apt install python3-pip
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
 ```
 
-Установка Ansible:
+Переход в директорию с проектом:
 ```bash
-pip install ansible
-pip install --upgrade ansible
+cd /<DIR>
 ```
 
 Установка Коллекций:
