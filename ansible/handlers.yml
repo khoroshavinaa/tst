@@ -6,3 +6,19 @@
   ansible.docker.docker_container:
     name: grafana
     state: restarted
+- name: Перезапуск MySQL
+  ansible.docker.docker_container:
+    name: mysql
+    state: restarted
+- name: Перезапуск Fluentd
+  ansible.docker.docker_container:
+    name: fluentd
+    state: restarted
+- name: Перезапуск Apache First.tst
+  ansible.docker.docker_container:
+    name: apache_first
+    state: restarted
+- name: Перезапуск Apache Second.tst
+  ansible.docker.docker_container:
+    name: apache_second
+    state: restarted
