@@ -1,0 +1,11 @@
+- name: Запуск контейнера Node Exporter
+  community.docker.docker_container:
+    name: node-exporter
+    image: prom/node-exporter:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.8
+    ports:
+      - "127.0.0.1:9100:9100"

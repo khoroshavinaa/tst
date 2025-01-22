@@ -1,0 +1,47 @@
+- name: Сборка образа Apache
+  community.docker.docker_image:
+    source: build
+    build:
+      path: ./apache2
+      dockerfile: Dockerfile
+    force_source: yes
+    force_tag: yes
+    name: tst-image-apache
+- name: Копируем файлы сайтов для виртуальных хостов
+  copy:
+    src: files/public/
+    dest: "{{ www_content_path }}"
+- name: Копирование конфигов Apache
+  copy:
+    src: apache2/conf/
+    dest: "{{  apache_path }}/conf"
+- name: Запуск контейнера Apache для виртуального хоста first.tst
+  community.docker.docker_container:
+    name: apache_first
+    image: tst-image-apache
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.14
+    ports:
+      - "127.0.0.1:8081:80"
+    volumes:
+      - "{{ apache_path }}/conf/first.vhost:/etc/apache2/sites-enabled/"
+      - "{{ apache_path }}/logs:/var/log/apache2"
+      - "{{ www_content_path }}/first.tst:/var/www/html"
+- name: Запуск контейнера Apache для виртуального хоста second.tst
+  community.docker.docker_container:
+    name: apache_second
+    image: tst-image-apache
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.13
+    ports:
+      - "127.0.0.1:8082:80"
+    volumes:
+      - "{{ apache_path }}/conf/second.vhost:/etc/apache2/sites-enabled/"
+      - "{{ apache_path }}/logs:/var/log/apache2"
+      - "{{ www_content_path }}/second.tst:/var/www/html"

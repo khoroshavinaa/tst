@@ -1,0 +1,18 @@
+- name: Копирование конфигов Grafana
+  ansible.builtin.copy:
+    src: files/grafana/
+    dest: "{{ grafana_path }}"
+- name: Запуск контейнера Grafana
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.6
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - "{{ grafana_path }}/dashboards:/etc/grafana/provisioning/dashboards"
+      - "{{ grafana_path }}/datasources:/etc/grafana/provisioning/datasources"

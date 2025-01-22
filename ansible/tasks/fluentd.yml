@@ -1,0 +1,31 @@
+- name: Копирование конфигов Fluentd
+  copy:
+    src: fluentd/conf/
+    dest: "{{ fluentd_conf_path }}"
+- name: Сборка образа Fluentd
+  community.docker.docker_image:
+    source: build
+    build:
+      path: ./fluentd
+      dockerfile: Dockerfile
+    name: tst-image-fluentd
+- name: Запуск контейнера Fluentd
+  community.docker.docker_container:
+    name: fluentd
+    image: tst-image-fluentd
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.7
+    ports:
+      - 127.0.0.1:5140:5140
+    volumes:
+      - "{{ nginx_path }}/logs:/var/log/nginx/:ro"
+      - "{{ fluentd_conf_path }}:/fluentd/etc"
+    command: >
+      sh -c "chown -R fluent:fluent /fluentd/log && chmod -R 755 /fluentd/log &&
+
+
+
+             fluentd -c /fluentd/etc/fluent.conf"

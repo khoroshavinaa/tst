@@ -1,0 +1,18 @@
+- name: Копирование конфигов MySQL Exporter
+  copy:
+    src: files/mysql_exporter/
+    dest: "{{  mysql_exporter_path }}"
+- name: Запуск контейнера MySQL Exporter
+  community.docker.docker_container:
+    name: mysql-exporter
+    image: prom/mysqld-exporter:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.10
+    ports:
+      - "127.0.0.1:9104:9104"
+    command: ["--config.my-cnf=/etc/.my.cnf"]
+    volumes:
+      - "{{ mysql_exporter_path }}/my.cnf:/etc/.my.cnf:ro"

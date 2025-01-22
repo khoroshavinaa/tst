@@ -1,0 +1,30 @@
+- name: Настройка стека приложений
+  hosts: localhost
+  become: true
+  vars:
+    docker_network: ts_test_network
+    nginx_path: /srv/nginx
+    apache_path: /srv/apache
+    mysql_path: /srv/mysql
+    www_content_path: /srv/www/html
+    fluentd_conf_path: /srv/fluentd
+    mysql_exporter_path: /srv/mysql_exporter
+    prometheus_conf_path: /srv/prometheus
+    grafana_path: /srv/grafana
+    subnet: 10.5.0.0/24
+    gateway: 10.5.0.100
+  tasks:
+    - include_tasks: ansible/tasks/main.yml
+    - include_tasks: ansible/tasks/cAdvisor.yml
+    - include_tasks: ansible/tasks/apache.yml
+    - include_tasks: ansible/tasks/nginx.yml
+    - include_tasks: ansible/tasks/mysql.yml
+    - include_tasks: ansible/tasks/mysql_exporter.yml
+    - include_tasks: ansible/tasks/nginx_exporter.yml
+    - include_tasks: ansible/tasks/node_exporter.yml
+    - include_tasks: ansible/tasks/prometheus.yml
+    - include_tasks: ansible/tasks/grafana.yml
+    - include_tasks: ansible/tasks/fluentd.yml
+    - include_tasks: ansible/tasks/test.yml
+  handlers:
+    - include_tasks: ansible/handlers.yml

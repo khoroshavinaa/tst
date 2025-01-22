@@ -1,0 +1,37 @@
+- name: Установка необходимых компонентов
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - docker.io
+      - python3-pip
+    state: present
+- name: Установка модуля Docker
+  ansible.builtin.pip:
+    name: docker
+- name: Установка модуля PyMySQL
+  ansible.builtin.pip:
+    name: PyMySQL
+- name: Создание каталогов
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - "{{ nginx_path }}/conf"
+    - "{{ nginx_path }}/logs"
+    - "{{ apache_path }}/conf"
+    - "{{ apache_path }}/logs"
+    - "{{ mysql_path }}"
+    - "{{ mysql_exporter_path }}"
+    - "{{ www_content_path }}"
+    - "{{ prometheus_conf_path }}"
+    - "{{ grafana_path }}"
+- name: Создание сети Docker
+  community.docker.docker_network:
+    name: "{{ docker_network }}"
+    driver: bridge
+    state: present
+    ipam_config:
+      - subnet: "{{ subnet }}"

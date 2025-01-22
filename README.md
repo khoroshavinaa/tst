@@ -1,0 +1,147 @@
+# khoroshavinaa
+
+## Проект мониторинга и агрегации логов
+Этот репозиторий содержит Ansible playbook для настройки полного стека мониторинга и агрегации логов с использованием контейнеров Docker. 
+
+![Static Badge](https://img.shields.io/badge/khoroshavinaa-tst-ansible)
+![GitHub top language](https://img.shields.io/github/languages/top/khoroshavinaa/tst)
+![GitHub](https://img.shields.io/github/license/khoroshavinaa/tst)
+![GitHub Repo stars](https://img.shields.io/github/stars/khoroshavinaa/tst)
+![GitHub issues](https://img.shields.io/github/issues/khoroshavinaa/tst)
+
+Стек включает:
+
+- **Nginx** (с GeoIP и пользовательским форматом логов).
+- **Apache с PHP 7.2** (в качестве backend).
+- **Node Exporter, Nginx Exporter, MySQL Exporter, cAdvisor** (для метрик Prometheus).
+- **Prometheus** (сбор метрик).
+- **Grafana** (визуализация метрик).
+- **Fluentd** (агрегация логов).
+- **MySQL** (хранилище агрегированных журналов).
+
+## Структура проекта
+
+```
+.
+ansible-docker-monitoring-stack/
+├── apache2/                  # Исходники для сборки Apache2
+│   ├── Dockerfile            # Dockerfile для сборки Apache2
+│   ├── httpd.conf            # Кофигурационный файл Apache2
+│   └── conf/                 # Конфигурации виртуальных хостов
+│       ├── first.vhost/      # Кофигурации первого виртуального хоста
+│       └── second.vhost/     # Кофигурации второго виртуального хоста
+├── nginx/                    # Исходники для сборки Nginx
+│   ├── conf/                 # Кофигурационные файлы Nginx
+│   ├── Dockerfile            # Dockerfile для сборки Nginx
+│   └── nginx.conf            # Кофигурационный файл Nginx
+├── files/                    # Внешние конфигурации и скрипты
+│   ├── grafana/              # Grafana
+│   │   ├── dashboards/       # Дашборды Grafana
+│   │   └── datasource/       # Конфигурационный файл источников данных
+│   ├── mysql_exporter/       # Конфигурация MySQL Exporter
+│   ├── public/               # Файлы для доступа из внешней сети
+│   │   ├── firsts.tst/       # Файлы первого виртуального хоста
+│   │   └── second.tst/       # Файлы второго виртуального хоста
+│   └── test.sh               # Скрипт тестирования запуска сервисов
+├── fluentd/                  # Fluentd
+│   ├── conf/                 # Кофигурации Fluentd
+│   └── Dockerfile            # Dockerfile для сборки Fluentd
+├── requirements.yml          # Зависимости/Коллекции проекта
+├── playbook.yml              # Главный Ansible Playbook
+└── README.md                 # Документация проекта
+```
+## Установка и настройка
+## Требования
+
+- **Ansible**
+  - Коллекция `community.docker`.
+  - Коллекция `community.mysql`.
+- **Python**
+
+
+## Настройка
+
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/khoroshavinaa/tst.git
+```
+
+### 2. Установка Ansible и зависимостей
+Установка Ansible:
+```bash
+sudo apt install python3-pip
+```
+
+Установка Ansible:
+```bash
+pip install ansible
+pip install --upgrade ansible
+```
+
+Установка Коллекций:
+```bash
+ansible-galaxy collection install -r requirements.yml
+```
+
+### 3. Запуск сценария
+Выполните сценарий настройки стека:
+```bash
+ansible-playbook playbook.yml
+```
+
+## Компоненты
+
+### Nginx
+- Работает как реверс прокси-сервер для двух виртуальных хостов:
+ - `first.tst` → бэкэнд Apache.
+ - `second.tst` → бэкэнд Apache.
+- Пользовательский формат журнала включает:
+ - `timestamp`, `request_time`, `upstream_time`, `remote_addr`, `remote_user`, `time_local`, `request`, `status`, `body_bytes_sent`, `http_referer`, `http_user_agent`, `geoip_country_code`
+
+Мониторинг
+- **Prometheus** собирает метрики из:
+ - Node Exporter.
+ - Nginx Exporter.
+ - MySQL Exporter.
+ - cAdvisor.
+- **Grafana** визуализирует показатели с помощью предварительно настроенных панелей мониторинга.
+
+### Агрегация логов
+- **Fluentd** собирает логи Nginx и отправляет их в базу данных MySQL.
+- Grafana отображает последние 100 записей запросов к Nginx и статистику запросов по виртуальным хостам.
+
+Тестирование
+
+### 1. Добавление доменов в `/etc/hosts` (Linux) `\Windows\System32\drivers\etc\hosts` (Windows)
+Сопоставьте домены с IP-адресом виртуальной машины:
+```
+<IP-VM> first.tst
+<IP-VM> second.tst
+<IP-VM> grafana.tst
+<IP-VM> prometheus.tst
+```
+
+### 2. Сайты
+- Посетите `http://first.tst` и `http://second.tst`, чтобы протестировать виртуальные хосты.
+- Посетите `http://grafana.tst` для просмотра панелей инструментов Grafana.
+- Посетите `http://prometheus.tst` для Prometheus.
+
+## Примечания
+- Журналы и конфигурации будут установлены на хост-сервере в каталоге `/srv/`.
+- 
+
+## Поиск неисправностей
+
+- Используйте `docker logs <container_name>` для проверки журналов любого контейнера.
+- Убедитесь, что все необходимые порты открыты и не заблокированы брандмауэром.
+
+## Дополнительная информация
+
+ansible.cfg: Настройки Ansible (путь к инвентарю, выключение host_key_checking и т. д.).
+inventory.ini: Файл с указанием хостов для развертывания.
+playbook.yml: Главный сценарий, вызывающий все роли и задачи.
+tasks/: Подзадачи для модульной организации кода.
+roles/: Организация задач, файлов и шаблонов по ролям.
+docker-compose/: В случае, если потребуется совместимость с Docker Compose.
+nginx/: Исходный код для кастомного Nginx (с GeoIP модулем).
+grafana_dashboards/: Готовые дашборды Grafana для импорта.

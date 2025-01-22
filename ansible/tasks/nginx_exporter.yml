@@ -1,0 +1,17 @@
+- name: Запуск контейнера Nginx Exporter
+  community.docker.docker_container:
+    name: nginx-exporter
+    image: nginx/nginx-prometheus-exporter:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.9
+    ports:
+      - "127.0.0.1:9113:9113"
+    env:
+      NGINX_HOST: 10.5.0.2
+      NGINX_PORT: "9099"
+    command: >
+      -nginx.scrape-uri="http://10.5.0.2:9099/server-status"
+

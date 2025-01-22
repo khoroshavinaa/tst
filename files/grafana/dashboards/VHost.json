@@ -1,0 +1,289 @@
+{
+	"annotations": {
+		"list": [
+			{
+				"builtIn": 1,
+				"datasource": {
+					"type": "grafana",
+					"uid": "-- Grafana --"
+				},
+				"enable": true,
+				"hide": true,
+				"iconColor": "rgba(0, 211, 255, 1)",
+				"name": "Annotations & Alerts",
+				"type": "dashboard"
+			}
+		]
+	},
+	"editable": true,
+	"fiscalYearStartMonth": 0,
+	"graphTooltip": 0,
+	"id": 8,
+	"links": [],
+	"liveNow": true,
+	"panels": [
+		{
+			"datasource": "mysql",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "palette-classic"
+					},
+					"custom": {
+						"axisBorderShow": false,
+						"axisCenteredZero": true,
+						"axisColorMode": "text",
+						"axisGridShow": true,
+						"axisLabel": "REQUEST",
+						"axisPlacement": "auto",
+						"axisSoftMin": 0,
+						"axisWidth": 20,
+						"barAlignment": 0,
+						"barWidthFactor": 0.5,
+						"drawStyle": "bars",
+						"fillOpacity": 0,
+						"gradientMode": "none",
+						"hideFrom": {
+							"legend": false,
+							"tooltip": false,
+							"viz": false
+						},
+						"insertNulls": false,
+						"lineInterpolation": "linear",
+						"lineStyle": {
+							"fill": "solid"
+						},
+						"lineWidth": 2,
+						"pointSize": 4,
+						"scaleDistribution": {
+							"type": "linear"
+						},
+						"showPoints": "never",
+						"spanNulls": false,
+						"stacking": {
+							"group": "A",
+							"mode": "normal"
+						},
+						"thresholdsStyle": {
+							"mode": "off"
+						}
+					},
+					"displayName": "Request",
+					"fieldMinMax": true,
+					"mappings": [],
+					"min": 0,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{
+								"color": "green",
+								"value": null
+							},
+							{
+								"color": "red",
+								"value": 80
+							}
+						]
+					}
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 7,
+				"w": 24,
+				"x": 0,
+				"y": 0
+			},
+			"id": 2,
+			"options": {
+				"legend": {
+					"calcs": [
+						"count",
+						"last",
+						"max"
+					],
+					"displayMode": "list",
+					"placement": "bottom",
+					"showLegend": true
+				},
+				"tooltip": {
+					"mode": "single",
+					"sort": "none"
+				}
+			},
+			"pluginVersion": "11.4.0",
+			"targets": [
+				{
+					"dataset": "fluentd",
+					"datasource": "mysql",
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "SELECT \r\n    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(STR_TO_DATE(REPLACE(REPLACE(timestamp, '\"', ''), 'T', ' '), '%Y-%m-%d %H:%i:%s')) / 30) * 30) AS time,\r\n    COUNT(*) AS HOST,\r\n    CASE \r\n        WHEN request LIKE '\"GET http://second.tst%' THEN 'second.tst'\r\n    END AS virtual_host\r\nFROM logs\r\nWHERE timestamp IS NOT NULL\r\nAND (\r\n    request LIKE '\"GET http://second.tst%'\r\n)\r\nGROUP BY virtual_host, FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(STR_TO_DATE(REPLACE(REPLACE(timestamp, '\"', ''), 'T', ' '), '%Y-%m-%d %H:%i:%s')) / 30) * 30)\r\nORDER BY time ASC;\r\n",
+					"refId": "A",
+					"sql": {
+						"columns": [
+							{
+								"parameters": [],
+								"type": "function"
+							}
+						],
+						"groupBy": [
+							{
+								"property": {
+									"type": "string"
+								},
+								"type": "groupBy"
+							}
+						],
+						"limit": 50
+					}
+				}
+			],
+			"title": "Nginx VHost Second.tst",
+			"type": "timeseries"
+		},
+		{
+			"datasource": "mysql",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "palette-classic"
+					},
+					"custom": {
+						"axisBorderShow": false,
+						"axisCenteredZero": true,
+						"axisColorMode": "text",
+						"axisGridShow": true,
+						"axisLabel": "REQUEST",
+						"axisPlacement": "left",
+						"axisSoftMin": 0,
+						"axisWidth": 20,
+						"barAlignment": 0,
+						"barWidthFactor": 0.6,
+						"drawStyle": "bars",
+						"fillOpacity": 8,
+						"gradientMode": "none",
+						"hideFrom": {
+							"legend": false,
+							"tooltip": false,
+							"viz": false
+						},
+						"insertNulls": false,
+						"lineInterpolation": "linear",
+						"lineStyle": {
+							"fill": "solid"
+						},
+						"lineWidth": 1,
+						"pointSize": 5,
+						"scaleDistribution": {
+							"type": "linear"
+						},
+						"showPoints": "never",
+						"spanNulls": true,
+						"stacking": {
+							"group": "A",
+							"mode": "normal"
+						},
+						"thresholdsStyle": {
+							"mode": "off"
+						}
+					},
+					"displayName": "Request",
+					"fieldMinMax": false,
+					"mappings": [],
+					"min": 0,
+					"noValue": "-",
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{
+								"color": "green",
+								"value": null
+							},
+							{
+								"color": "red",
+								"value": 80
+							}
+						]
+					}
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 7,
+				"w": 24,
+				"x": 0,
+				"y": 7
+			},
+			"id": 1,
+			"interval": "1",
+			"options": {
+				"legend": {
+					"calcs": [
+						"count",
+						"last",
+						"max"
+					],
+					"displayMode": "list",
+					"placement": "bottom",
+					"showLegend": true
+				},
+				"tooltip": {
+					"mode": "single",
+					"sort": "none"
+				}
+			},
+			"pluginVersion": "11.4.0",
+			"targets": [
+				{
+					"dataset": "fluentd",
+					"datasource": "mysql",
+					"editorMode": "code",
+					"format": "time_series",
+					"rawQuery": true,
+					"rawSql": "SELECT \r\n    FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(STR_TO_DATE(REPLACE(REPLACE(timestamp, '\"', ''), 'T', ' '), '%Y-%m-%d %H:%i:%s')) / 30) * 30) AS time,\r\n    COUNT(*) AS HOST,\r\n    CASE \r\n        WHEN request LIKE '\"GET http://first.tst%' THEN 'first.tst'\r\n    END AS virtual_host\r\nFROM logs\r\nWHERE timestamp IS NOT NULL\r\nAND (\r\n    request LIKE '\"GET http://first.tst%'\r\n)\r\nGROUP BY virtual_host, FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(STR_TO_DATE(REPLACE(REPLACE(timestamp, '\"', ''), 'T', ' '), '%Y-%m-%d %H:%i:%s')) / 30) * 30)\r\nORDER BY time ASC;\r\n",
+					"refId": "A",
+					"sql": {
+						"columns": [
+							{
+								"parameters": [],
+								"type": "function"
+							}
+						],
+						"groupBy": [
+							{
+								"property": {
+									"type": "string"
+								},
+								"type": "groupBy"
+							}
+						],
+						"limit": 50
+					}
+				}
+			],
+			"title": "Nginx VHost First.tst",
+			"type": "timeseries"
+		}
+	],
+	"preload": false,
+	"refresh": "5s",
+	"schemaVersion": 40,
+	"tags": [
+		"Apache2"
+	],
+	"templating": {
+		"list": []
+	},
+	"time": {
+		"from": "now-6h",
+		"to": "now"
+	},
+	"timepicker": {},
+	"timezone": "browser",
+	"title": "VHost",
+	"uid": "beahflfct7awwd",
+	"version": 21,
+	"weekStart": ""
+}

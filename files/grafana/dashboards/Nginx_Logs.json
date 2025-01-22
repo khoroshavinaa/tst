@@ -1,0 +1,308 @@
+{
+	"annotations": {
+		"list": [
+			{
+				"builtIn": 1,
+				"datasource": {
+					"type": "grafana",
+					"uid": "-- Grafana --"
+				},
+				"enable": true,
+				"hide": true,
+				"iconColor": "rgba(0, 211, 255, 1)",
+				"name": "Annotations & Alerts",
+				"type": "dashboard"
+			}
+		]
+	},
+	"editable": true,
+	"fiscalYearStartMonth": 0,
+	"graphTooltip": 0,
+	"id": 7,
+	"links": [],
+	"panels": [
+		{
+			"datasource": "mysql",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "palette-classic"
+					},
+					"custom": {
+						"align": "left",
+						"cellOptions": {
+							"type": "color-text",
+							"wrapText": false
+						},
+						"filterable": false,
+						"inspect": false
+					},
+					"fieldMinMax": false,
+					"mappings": [],
+					"min": -1,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{
+								"color": "green",
+								"value": null
+							},
+							{
+								"color": "red",
+								"value": 80
+							}
+						]
+					}
+				},
+				"overrides": [
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "id"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 29
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "time"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 178
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "request_time"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 107
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "upstream_time"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 121
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "remote_addr"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 119
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "remote_user"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 105
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "time_local"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 212
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "request"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 256
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "status"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 68
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "body_bytes_sent"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 138
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "http_user_agent"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 180
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "http_referer"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 151
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "timestamp"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 193
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "converted_timestamp"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 187
+							}
+						]
+					}
+				]
+			},
+			"gridPos": {
+				"h": 14,
+				"w": 24,
+				"x": 0,
+				"y": 0
+			},
+			"id": 1,
+			"options": {
+				"cellHeight": "sm",
+				"footer": {
+					"countRows": false,
+					"enablePagination": true,
+					"fields": "",
+					"reducer": [
+						"sum"
+					],
+					"show": false
+				},
+				"showHeader": true,
+				"sortBy": [
+					{
+						"desc": true,
+						"displayName": "id"
+					}
+				]
+			},
+			"pluginVersion": "11.4.0",
+			"targets": [
+				{
+					"dataset": "fluentd",
+					"datasource": "mysql",
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "SELECT \r\n    id,\r\n    CAST(REPLACE(timestamp, '\"', '') AS DATETIME) AS timestamp,\r\n    request_time,\r\n    upstream_time,\r\n    remote_addr,\r\n    remote_user,\r\n    time_local,\r\n    request,\r\n    status,\r\n    body_bytes_sent,\r\n    http_referer,\r\n    http_user_agent,\r\n    geoip_country_code\r\nFROM logs\r\nORDER BY id DESC\r\nLIMIT 100;\r\n",
+					"refId": "A",
+					"sql": {
+						"columns": [
+							{
+								"parameters": [],
+								"type": "function"
+							}
+						],
+						"groupBy": [
+							{
+								"property": {
+									"type": "string"
+								},
+								"type": "groupBy"
+							}
+						],
+						"limit": 50
+					},
+					"table": "logs"
+				}
+			],
+			"title": "Nginx Logs",
+			"type": "table"
+		}
+	],
+	"preload": false,
+	"schemaVersion": 40,
+	"tags": [
+		"Nginx",
+		"Mysql",
+		"Fluentd"
+	],
+	"templating": {
+		"list": []
+	},
+	"time": {
+		"from": "now-6h",
+		"to": "now"
+	},
+	"timepicker": {},
+	"timezone": "browser",
+	"title": "Nginx Logs",
+	"uid": "ceahecz5hwmpsd",
+	"version": 12,
+	"weekStart": ""
+}

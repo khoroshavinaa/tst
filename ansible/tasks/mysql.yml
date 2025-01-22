@@ -1,0 +1,75 @@
+- name: Настройка контейнера MySQL
+  community.docker.docker_container:
+    name: mysql
+    image: mysql:5.7
+    state: started
+    restart_policy: always
+    env:
+      MYSQL_ROOT_PASSWORD: fluentd
+      MYSQL_DATABASE: fluentd
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.4
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - "{{ mysql_path }}:/var/lib/mysql"
+- name: Ожидаем запуск MySQL
+  mysql_query:
+    login_host: 127.0.0.1
+    login_user: root
+    login_password: fluentd
+    query: "SELECT 1;"
+    connect_timeout: 5
+  register: mysql_ready
+  retries: 10
+  delay: 5
+  until: mysql_ready is succeeded
+- name: Создание таблицы в БД для логов Access
+  retries: 5
+  delay: 10
+  mysql_query:
+    login_host: 127.0.0.1
+    login_db: fluentd
+    login_user: root
+    login_password: fluentd
+    query: |
+      CREATE TABLE IF NOT EXISTS logs (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        timestamp VARCHAR(30),
+        request_time VARCHAR(10),
+        upstream_time VARCHAR(10),
+        remote_addr VARCHAR(20),
+        remote_user VARCHAR(30),
+        time_local VARCHAR(30),
+        request VARCHAR(255),
+        status VARCHAR(10),
+        body_bytes_sent VARCHAR(10),
+        http_referer VARCHAR(100),
+        http_user_agent VARCHAR(255),
+        geoip_country_code VARCHAR(10)
+      );
+- name: Создание таблицы в БД для логов Error
+  retries: 5
+  delay: 10
+  mysql_query:
+    login_host: 127.0.0.1
+    login_db: fluentd
+    login_user: root
+    login_password: fluentd
+    query: |
+      CREATE TABLE IF NOT EXISTS logs_error (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        timestamp VARCHAR(30),
+        level VARCHAR(255),
+        pid VARCHAR(255),
+        tid VARCHAR(255),
+        connection_id VARCHAR(255),
+        message VARCHAR(255),
+        client VARCHAR(255),
+        server VARCHAR(255),
+        request_method VARCHAR(255),
+        upstream VARCHAR(255),
+        host VARCHAR(255),
+        status VARCHAR(255)
+      );

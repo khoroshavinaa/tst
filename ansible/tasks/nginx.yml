@@ -1,0 +1,27 @@
+- name: Сборка образа Nginx
+  community.docker.docker_image:
+    source: build
+    build:
+      path: ./nginx
+      dockerfile: Dockerfile
+    force_source: yes
+    force_tag: yes
+    name: tst-image-nginx
+- name: Копирование конфигов Nginx
+  copy:
+    src: nginx/conf/
+    dest: "{{  nginx_path }}/conf"
+- name: Запуск контейнера Nginx
+  community.docker.docker_container:
+    name: nginx
+    image: tst-image-nginx
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.2
+    ports:
+      - "0.0.0.0:80:80"
+    volumes:
+      - "{{ nginx_path }}/logs:/var/log/nginx"
+      - "{{ nginx_path }}/conf/:/etc/nginx/sites-enabled/"

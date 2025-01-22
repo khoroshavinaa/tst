@@ -1,0 +1,8 @@
+- name: Перезапуск Nginx
+  community.docker.docker_container:
+    name: nginx
+    state: restarted
+- name: Перезапуск Grafana
+  ansible.docker.docker_container:
+    name: grafana
+    state: restarted

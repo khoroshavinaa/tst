@@ -1,0 +1,17 @@
+- name: Копирование конфигов Prometheus
+  copy:
+    src: files/prometheus/
+    dest: "{{ prometheus_conf_path }}"
+- name: Запуск контейнера Prometheus
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+        ipv4_address: 10.5.0.5
+    ports:
+      - 127.0.0.1:9090:9090
+    volumes:
+      - "{{ prometheus_conf_path }}:/etc/prometheus/"
