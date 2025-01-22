@@ -63,13 +63,5 @@
         timestamp VARCHAR(30),
         level VARCHAR(255),
         pid VARCHAR(255),
-        tid VARCHAR(255),
-        connection_id VARCHAR(255),
-        message VARCHAR(255),
-        client VARCHAR(255),
-        server VARCHAR(255),
-        request_method VARCHAR(255),
-        upstream VARCHAR(255),
-        host VARCHAR(255),
-        status VARCHAR(255)
+        message VARCHAR(255)
       );

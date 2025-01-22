@@ -18,7 +18,7 @@
 	"editable": true,
 	"fiscalYearStartMonth": 0,
 	"graphTooltip": 0,
-	"id": 7,
+	"id": 2,
 	"links": [],
 	"panels": [
 		{
@@ -226,7 +226,7 @@
 				]
 			},
 			"gridPos": {
-				"h": 14,
+				"h": 10,
 				"w": 24,
 				"x": 0,
 				"y": 0
@@ -281,7 +281,140 @@
 					"table": "logs"
 				}
 			],
-			"title": "Nginx Logs",
+			"title": "Nginx Logs Access",
+			"type": "table"
+		},
+		{
+			"datasource": "mysql",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "palette-classic"
+					},
+					"custom": {
+						"align": "auto",
+						"cellOptions": {
+							"type": "color-text"
+						},
+						"inspect": false
+					},
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{
+								"color": "green",
+								"value": null
+							},
+							{
+								"color": "red",
+								"value": 80
+							}
+						]
+					}
+				},
+				"overrides": [
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "id"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 42
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "timestamp"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 308
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "level"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 224
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "pid"
+						},
+						"properties": [
+							{
+								"id": "custom.width",
+								"value": 65
+							}
+						]
+					}
+				]
+			},
+			"gridPos": {
+				"h": 10,
+				"w": 24,
+				"x": 0,
+				"y": 10
+			},
+			"id": 2,
+			"options": {
+				"cellHeight": "sm",
+				"footer": {
+					"countRows": false,
+					"enablePagination": true,
+					"fields": "",
+					"reducer": [
+						"sum"
+					],
+					"show": false
+				},
+				"showHeader": true,
+				"sortBy": []
+			},
+			"pluginVersion": "11.4.0",
+			"targets": [
+				{
+					"dataset": "fluentd",
+					"datasource": "mysql",
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "SELECT \r\n    id,\r\n    timestamp,\r\n    level,\r\n    pid,\r\n    message\r\nFROM logs_error\r\nORDER BY id DESC\r\nLIMIT 100;\r\n",
+					"refId": "A",
+					"sql": {
+						"columns": [
+							{
+								"parameters": [],
+								"type": "function"
+							}
+						],
+						"groupBy": [
+							{
+								"property": {
+									"type": "string"
+								},
+								"type": "groupBy"
+							}
+						],
+						"limit": 50
+					}
+				}
+			],
+			"title": "Nginx Logs Error",
 			"type": "table"
 		}
 	],
@@ -303,6 +436,6 @@
 	"timezone": "browser",
 	"title": "Nginx Logs",
 	"uid": "ceahecz5hwmpsd",
-	"version": 12,
+	"version": 5,
 	"weekStart": ""
 }
