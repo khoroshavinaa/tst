@@ -60,7 +60,7 @@ ansible-docker-monitoring-stack/
   - Коллекция `community.mysql`.
 - **Python**
 
-Если ваша система не поддверживает ядро Ansible версии >=2.15 то коллекция `community.docker` может не работать. 
+Если ваша система не поддерживает ядро Ansible версии >=2.15 то коллекция `community.docker` может не работать. 
 
 ## Настройка
 
