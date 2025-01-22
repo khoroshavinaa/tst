@@ -1,7 +1,7 @@
 # khoroshavinaa
+Этот репозиторий содержит Ansible playbook для настройки полного стека мониторинга и агрегации логов с использованием контейнеров Docker. 
 
 ## Проект мониторинга и агрегации логов
-Этот репозиторий содержит Ansible playbook для настройки полного стека мониторинга и агрегации логов с использованием контейнеров Docker. 
 
 ![Static Badge](https://img.shields.io/badge/khoroshavinaa-tst-ansible)
 ![GitHub top language](https://img.shields.io/github/languages/top/khoroshavinaa/tst)
